@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<img src="{{ pizza_img }}" alt="{{ alt }}">
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.size.label }}<br>
+        {{ form.size(class="form-control", type="size") }}<br>
+        {% for error in form.size.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.dough.label }}<br>
+        {{ form.dough(class="form-control", type="dough") }}<br>
+        {% for error in form.dough.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.supplements.label }}<br>
+        {{ form.supplements(class="form-control", type="supplements") }}<br>
+        {% for error in form.supplements.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.sauces.label }}<br>
+        {{ form.sauces(class="form-control", type="sauces") }}<br>
+        {% for error in form.sauces.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{ message }}
+</form>
+{% endblock %}

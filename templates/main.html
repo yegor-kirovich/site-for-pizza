@@ -74,7 +74,7 @@
     {% endif %}
     {% for item in pizza %}
         {% if discount == 1 %}
-            <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/par/{{ item.name }}"'>
+            <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_pizza/{{ item.id }}"'>
                 <img class="pizza_img" src={{ short + item.href }}>
                 <h3 class="pizza_name">{{ item.name }}</h3>
                 <h6 class="pizza_text">{{ item.about }}</h6>
@@ -82,7 +82,7 @@
                 <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
             </div>
         {% else %}
-            <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/par/{{ item.name }}"'>
+            <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_pizza/{{ item.id }}"'>
                 <img class="pizza_img" src={{ short + item.href }}>
                 <h3 class="pizza_name">{{ item.name }}</h3>
                 <h6 class="pizza_text">{{ item.about }}</h6>
