@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" type="css" href="static/css/style.css" />
+    <link rel="stylesheet" href={{ css }}>
     <title>{{title}}</title>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar">
         {% if current_user.is_authenticated %}
-            <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+            <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
+            <button class="prof" onClick='location.href="http://127.0.0.1:5000/profile"'>{{ current_user.name }}</button>
+            <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
         {% else %}
             <p>
-                <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-                <a class="btn btn-success" href="/login">Войти</a>
+                <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
+                <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
+                <button class="reg" onClick='location.href="http://127.0.0.1:5000/register"'>Зарегистрироваться</button>
+                <button class="log" onClick='location.href="http://127.0.0.1:5000/login"'>Войти</button>
             </p>
         {% endif %}
     </nav>

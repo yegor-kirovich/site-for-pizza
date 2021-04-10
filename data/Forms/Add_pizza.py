@@ -7,6 +7,9 @@ from data.supplements_price import Supplements_price
 from data.sauces_db import Sauces
 
 
+db_session.global_init("db/pizzeria.db")
+
+
 class MultiCheckBoxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()

@@ -6,10 +6,10 @@ from data.user import User
 from data.orders import Orders
 from data.Forms.Login import LoginForm
 from data.Forms.Registration import RegisterForm
+from data.Forms.Add_pizza import AddPizzaForm
+from data.snacks import Snack
 
 db_session.global_init("db/pizzeria.db")
-
-from data.Forms.Add_pizza import AddPizzaForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -28,13 +28,14 @@ def load_user(user_id):
 def main_menu():
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza)
+    snack = db_sess.query(Snack)
     visits_count = session.get('visits_count', 0)
     session['visits_count'] = visits_count + 1
     short = "static/img/"
     if session['visits_count'] > 10:
         return render_template("main.html", pizza=pizza,
-                               short=short, discount=1)
-    return render_template("main.html", pizza=pizza, short=short, discount=0)
+                               short=short, discount=1, snack=snack, css=url_for('static', filename='css/style.css'))
+    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack, css=url_for('static', filename='css/style.css'))
 
 
 @app.route('/add_pizza/<int:pizza_id>', methods=['GET', 'POST'])
@@ -113,6 +114,11 @@ def login():
 @login_required
 def logout():
     logout_user()
+    return redirect("/")
+
+
+@app.route('/buy/<int:pizza_id>')
+def buy():
     return redirect("/")
 
 
