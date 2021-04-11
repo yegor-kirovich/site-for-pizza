@@ -3,11 +3,12 @@ from data import db_session
 from data.pizza import Pizza
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data.user import User
-from data.orders import Orders
+from data.pizza_orders import Pizza_orders
 from data.Forms.Login import LoginForm
 from data.Forms.Registration import RegisterForm
 from data.Forms.Add_pizza import AddPizzaForm
 from data.snacks import Snack
+from data.snacks_orders import Snacks_orders
 
 db_session.global_init("db/pizzeria.db")
 
@@ -34,8 +35,9 @@ def main_menu():
     short = "static/img/"
     if session['visits_count'] > 10:
         return render_template("main.html", pizza=pizza,
-                               short=short, discount=1, snack=snack, css=url_for('static', filename='css/style.css'))
-    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack, css=url_for('static', filename='css/style.css'))
+                               short=short, discount=1, snack=snack, css=url_for('static', filename='style.css'))
+    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack,
+                           css=url_for('static', filename='style.css'))
 
 
 @app.route('/add_pizza/<int:pizza_id>', methods=['GET', 'POST'])
@@ -44,31 +46,47 @@ def add_pizza(pizza_id):
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         if current_user.is_authenticated:
-            orders = Orders()
-            orders.pizza_id = pizza_id
-            orders.size = form.size.data
-            orders.dough = form.dough.data
-            orders.supplements = ', '.join(form.supplements.data)
-            orders.sauces = ', '.join(form.sauces.data)
-            current_user.orders.append(orders)
+            pizza_orders = Pizza_orders()
+            pizza_orders.pizza_id = pizza_id
+            pizza_orders.size = form.size.data
+            pizza_orders.dough = form.dough.data
+            pizza_orders.supplements = ', '.join(form.supplements.data)
+            pizza_orders.sauces = ', '.join(form.sauces.data)
+            current_user.pizza_orders.append(pizza_orders)
             db_sess.merge(current_user)
             db_sess.commit()
-            return redirect('/')
         else:
-            orders = session.get('orders', [])
-            orders.append({'pizza_id': pizza_id,
-                           'size': form.size.data,
-                           'dough': form.dough.data,
-                           'supplements': form.supplements.data,
-                           'sauces': form.sauces.data})
+            orders = session.get('orders', {'pizzas': [],
+                                            'snacks': []})
+            orders['pizzas'].append({'pizza_id': pizza_id,
+                                     'size': form.size.data,
+                                     'dough': form.dough.data,
+                                     'supplements': form.supplements.data,
+                                     'sauces': form.sauces.data})
             session['orders'] = orders
-
-            return redirect('/')
+        return redirect('/')
 
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza).get(pizza_id)
     return render_template('add_pizza.html', pizza_img=url_for('static', filename=f'img/{pizza.href}'),
                            form=form, alt=pizza.name)
+
+
+@app.route('/add_snack/<int:snack_id>')
+def add_snack(snack_id):
+    db_sess = db_session.create_session()
+    order_snack = Snacks_orders()
+    if current_user.is_authenticated:
+        order_snack.snack_id = snack_id
+        current_user.snacks_orders.append(order_snack)
+        db_sess.merge(current_user)
+        db_sess.commit()
+    else:
+        orders = session.get('orders', {'pizzas': [],
+                                        'snacks': []})
+        orders['snacks'].append({'snack_id': snack_id})
+        session['orders'] = orders
+    return redirect('/')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -114,11 +132,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect("/")
-
-
-@app.route('/buy/<int:pizza_id>')
-def buy():
     return redirect("/")
 
 
