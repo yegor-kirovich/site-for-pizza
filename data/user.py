@@ -18,7 +18,8 @@ class User(SqlAlchemyBase, UserMixin):
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
 
-    orders = orm.relation('Orders', back_populates='user')
+    pizza_orders = orm.relation('Pizza_orders', back_populates='user')
+    snacks_orders = orm.relation('Snacks_orders', back_populates='user')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

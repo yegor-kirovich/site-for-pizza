@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, RadioField, SubmitField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired
-from wtforms.fields.html5 import EmailField
 from data import db_session
 from data.supplements_price import Supplements_price
 from data.sauces_db import Sauces

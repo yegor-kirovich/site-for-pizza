@@ -3,8 +3,8 @@ from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
 
-class Orders(SqlAlchemyBase):
-    __tablename__ = 'orders'
+class Pizza_orders(SqlAlchemyBase):
+    __tablename__ = 'pizza_orders'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
