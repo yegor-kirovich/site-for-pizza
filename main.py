@@ -35,9 +35,10 @@ def main_menu():
     short = "static/img/"
     if session['visits_count'] > 10:
         return render_template("main.html", pizza=pizza,
-                               short=short, discount=1, snack=snack, css=url_for('static', filename='style.css'))
+                               short=short, discount=1, snack=snack,
+                               css=url_for('static', filename='style.css'), title='Пиццерия')
     return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack,
-                           css=url_for('static', filename='style.css'))
+                           css=url_for('static', filename='style.css'), title='Пиццерия')
 
 
 @app.route('/add_pizza/<int:pizza_id>', methods=['GET', 'POST'])
@@ -69,7 +70,7 @@ def add_pizza(pizza_id):
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza).get(pizza_id)
     return render_template('add_pizza.html', pizza_img=url_for('static', filename=f'img/{pizza.href}'),
-                           form=form, alt=pizza.name)
+                           form=form, alt=pizza.name, title='Добавление пиццы')
 
 
 @app.route('/add_snack/<int:snack_id>')
@@ -113,6 +114,12 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+@app.route('/profile')
+def profile_page():
+    return render_template('profile.html', title='Профиль',
+                           user_name=current_user.name, user_email=current_user.email)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -124,7 +131,7 @@ def login():
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
-                               form=form)
+                               form=form, title='Авторизация')
     return render_template('login.html', title='Авторизация', form=form)
 
 
