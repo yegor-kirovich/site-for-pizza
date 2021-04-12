@@ -4,18 +4,22 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href={{ css }}>
     <title>{{title}}</title>
+    <link href="static/icon/pizza_icon.ico" rel="shortcut icon">
 </head>
 <body>
 <header>
     <nav class="navbar">
         {% if current_user.is_authenticated %}
-            <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
-            <button class="prof" onClick='location.href="http://127.0.0.1:5000/profile"'>{{ current_user.name }}</button>
-            <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
+            <p>
+                <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
+                <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
+                <button class="prof" onClick='location.href="http://127.0.0.1:5000/profile"'>{{ current_user.name }}</button>
+                <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
+            </p>
         {% else %}
             <p>
-                <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
                 <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
+                <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
                 <button class="reg" onClick='location.href="http://127.0.0.1:5000/register"'>Зарегистрироваться</button>
                 <button class="log" onClick='location.href="http://127.0.0.1:5000/login"'>Войти</button>
             </p>
