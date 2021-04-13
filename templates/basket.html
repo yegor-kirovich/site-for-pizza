@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if log == 1 %}
+        {% for item in pizza %}
+            <div class="basket">
+                <img src="{{ short }}pizzas/{{ item[0].href }}">
+                <h2>{{ item[0].name }}</h2>
+                <button onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[1] }}"'>Удалить</button>
+            </div>
+        {% endfor %}
+        {% for item in snack %}
+            <div class="basket">
+                <img src="{{ short }}snacks/{{ item[0].href }}">
+                <h2>{{ item[0].name }}</h2>
+                <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

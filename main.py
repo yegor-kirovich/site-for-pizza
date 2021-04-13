@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, abort
 from data import db_session
 from data.pizza import Pizza
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -66,10 +66,9 @@ def add_pizza(pizza_id):
                                      'sauces': form.sauces.data})
             session['orders'] = orders
         return redirect('/')
-
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza).get(pizza_id)
-    return render_template('add_pizza.html', pizza_img=url_for('static', filename=f'img/{pizza.href}'),
+    return render_template('add_pizza.html', pizza_img=url_for('static', filename=f'img/pizzas/{pizza.href}'),
                            form=form, alt=pizza.name, title='Добавление пиццы')
 
 
@@ -133,6 +132,43 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form, title='Авторизация')
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/basket')
+def basket():
+    db_sess = db_session.create_session()
+    short = "static/img/"
+    if current_user.is_authenticated:
+        pizza_list = []
+        snack_list = []
+        for pizza in db_sess.query(Pizza_orders).filter(Pizza_orders.user_id == current_user.id):
+            for i in db_sess.query(Pizza).filter(Pizza.id == pizza.pizza_id):
+                pizza_list.append((i, pizza.id))
+        for snack in db_sess.query(Snacks_orders).filter(Snacks_orders.user_id == current_user.id):
+            for i in db_sess.query(Snack).filter(Snack.id == snack.snack_id):
+                snack_list.append((i, snack.id))
+        return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1)
+
+
+@app.route('/delete/<string:type>/<int:id>', methods=['GET', 'POST'])
+def item_delete(type, id):
+    db_sess = db_session.create_session()
+    if type == "pizza":
+        pizza = db_sess.query(Pizza_orders).filter(Pizza_orders.id == id).first()
+        if pizza:
+            db_sess.delete(pizza)
+            db_sess.commit()
+        else:
+            abort(404)
+        return redirect('/basket')
+    if type == "snack":
+        snack = db_sess.query(Snacks_orders).filter(Snacks_orders.id == id).first()
+        if snack:
+            db_sess.delete(snack)
+            db_sess.commit()
+        else:
+            abort(404)
+        return redirect('/basket')
 
 
 @app.route('/logout')
