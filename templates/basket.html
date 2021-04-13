@@ -16,5 +16,28 @@
                 <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
             </div>
         {% endfor %}
+    {% else %}
+        {% for item in pizza %}
+            <div class="basket">
+                <img src="{{ short }}pizzas/{{ item[1].href }}">
+                <h2>{{ item[1].name }}</h2>
+                <button onClick='location.href="http://127.0.0.1:5000/delete_log/pizza/{{ item[2] }}"'>Удалить</button>
+            </div>
+        {% endfor %}
+        {% for item in snack %}
+            {% if item[1].type == "snack" %}
+                <div class="basket">
+                    <img src="{{ short }}snacks/{{ item[1].href }}">
+                    <h2>{{ item[1].name }}</h2>
+                    <button onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>Удалить</button>
+                </div>
+            {% else %}
+                <div class="basket">
+                    <img src="{{ short }}drinks/{{ item[1].href }}">
+                    <h2>{{ item[1].name }}</h2>
+                    <button onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>Удалить</button>
+                </div>
+            {% endif %}
+        {% endfor %}
     {% endif %}
 {% endblock %}

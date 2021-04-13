@@ -148,6 +148,22 @@ def basket():
             for i in db_sess.query(Snack).filter(Snack.id == snack.snack_id):
                 snack_list.append((i, snack.id))
         return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1)
+    else:
+        pizza = session["orders"]["pizzas"]
+        snack = session["orders"]["snacks"]
+        list_pizza = []
+        list_snack = []
+        a = -1
+        for i in pizza:
+            a += 1
+            p = db_sess.query(Pizza).filter(Pizza.id == i["pizza_id"]).first()
+            list_pizza.append([i, p, a])
+        a = -1
+        for i in snack:
+            a += 1
+            p = db_sess.query(Snack).filter(Snack.id == i["snack_id"]).first()
+            list_snack.append([i, p, a])
+        return render_template('basket.html', pizza=list_pizza, snack=list_snack, short=short, log=0)
 
 
 @app.route('/delete/<string:type>/<int:id>', methods=['GET', 'POST'])
@@ -169,6 +185,20 @@ def item_delete(type, id):
         else:
             abort(404)
         return redirect('/basket')
+
+@app.route('/delete_log/<string:type>/<int:id>', methods=['GET', 'POST'])
+def delete_log(id, type):
+    if type == "pizza":
+        orders = session.get('orders', {'pizzas': [],
+                                        'snacks': []})
+        del orders["pizzas"][id]
+        session['orders'] = orders
+    else:
+        orders = session.get('orders', {'pizzas': [],
+                                        'snacks': []})
+        del orders["snacks"][id]
+        session['orders'] = orders
+    return redirect('/basket')
 
 
 @app.route('/logout')
