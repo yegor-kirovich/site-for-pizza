@@ -4,6 +4,7 @@ from data.pizza import Pizza
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data.user import User
 from data.pizza_orders import Pizza_orders
+from data.supplements_price import Supplements_price
 from data.Forms.Login import LoginForm
 from data.Forms.Registration import RegisterForm
 from data.Forms.Add_pizza import AddPizzaForm
@@ -18,6 +19,7 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+dis = 0
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -27,6 +29,7 @@ def load_user(user_id):
 
 @app.route('/')
 def main_menu():
+    global dis
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza)
     snack = db_sess.query(Snack)
@@ -34,9 +37,11 @@ def main_menu():
     session['visits_count'] = visits_count + 1
     short = "static/img/"
     if session['visits_count'] > 10:
+        dis = 1
         return render_template("main.html", pizza=pizza,
                                short=short, discount=1, snack=snack,
                                css=url_for('static', filename='style.css'), title='Пиццерия')
+    dis = 0
     return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack,
                            css=url_for('static', filename='style.css'), title='Пиццерия')
 
@@ -141,13 +146,72 @@ def basket():
     if current_user.is_authenticated:
         pizza_list = []
         snack_list = []
+        if "orders" in session:
+            if session["orders"]["pizzas"] != []:
+                pizzas = db_sess.query(Pizza_orders)
+                a = []
+                for i in pizzas:
+                    a.append(i.id)
+                if a == []:
+                    b = 0
+                else:
+                    b = a[-1] + 1
+                for i in range(len(session["orders"]["pizzas"])):
+                    pizza = Pizza_orders()
+                    pizza.id = b + i
+                    pizza_info = session["orders"]
+                    pizza.pizza_id = pizza_info["pizzas"][i]["pizza_id"]
+                    pizza.size = pizza_info["pizzas"][i]["size"]
+                    pizza.dough = pizza_info["pizzas"][i]["dough"]
+                    pizza.supplements = ", ".join(pizza_info["pizzas"][i]["supplements"])
+                    pizza.sauces = ", ".join(pizza_info["pizzas"][i]["sauces"])
+                    pizza.user_id = current_user.id
+                    db_sess.add(pizza)
+                    orders = session.get('orders', {'pizzas': [],
+                                                    'snacks': []})
+                    orders['pizzas'] = []
+                    session['orders'] = orders
+                    db_sess.commit()
+
+                if session["orders"]["snacks"] != []:
+                    snacks = db_sess.query(Snacks_orders)
+                    a = []
+                    for i in snacks:
+                        a.append(i.id)
+                    if a == []:
+                        b = 0
+                    else:
+                        b = a[-1] + 1
+                    print(len(session["orders"]["snacks"]))
+                    for i in range(len(session["orders"]["snacks"])):
+                        snack = Snacks_orders()
+                        snack.id = b + i
+                        snack_info = session["orders"]
+                        snack.snack_id = snack_info["snacks"][i]["snack_id"]
+                        snack.user_id = current_user.id
+                        db_sess.add(snack)
+                        orders = session.get('orders', {'pizzas': [],
+                                                        'snacks': []})
+                        orders['snacks'] = []
+                        session['orders'] = orders
+                        db_sess.commit()
+
         for pizza in db_sess.query(Pizza_orders).filter(Pizza_orders.user_id == current_user.id):
             for i in db_sess.query(Pizza).filter(Pizza.id == pizza.pizza_id):
-                pizza_list.append((i, pizza.id))
+                supl = []
+                sum = 0
+                for j in pizza.supplements.split(", "):
+                    sup = db_sess.query(Supplements_price).filter(Supplements_price.id == j).first()
+                    sum += sup.cost
+                    supl.append(sup.name)
+                if dis == 0:
+                    pizza_list.append((i, pizza, supl, i.cost + sum))
+                else:
+                    pizza_list.append((i, pizza, supl, i.dis_cost + sum))
         for snack in db_sess.query(Snacks_orders).filter(Snacks_orders.user_id == current_user.id):
             for i in db_sess.query(Snack).filter(Snack.id == snack.snack_id):
                 snack_list.append((i, snack.id))
-        return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1)
+        return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1, title="Корзина")
     else:
         pizza = session["orders"]["pizzas"]
         snack = session["orders"]["snacks"]
@@ -157,13 +221,23 @@ def basket():
         for i in pizza:
             a += 1
             p = db_sess.query(Pizza).filter(Pizza.id == i["pizza_id"]).first()
-            list_pizza.append([i, p, a])
+            print(i["supplements"])
+            sum = 0
+            supl = []
+            for j in i["supplements"]:
+                sup = db_sess.query(Supplements_price).filter(Supplements_price.id == j).first()
+                sum += sup.cost
+                supl.append(sup.name)
+            if dis == 0:
+                list_pizza.append([i, p, supl, a, p.cost + sum])
+            else:
+                list_pizza.append([i, p, supl, a, p.dis_cost + sum])
         a = -1
         for i in snack:
             a += 1
             p = db_sess.query(Snack).filter(Snack.id == i["snack_id"]).first()
             list_snack.append([i, p, a])
-        return render_template('basket.html', pizza=list_pizza, snack=list_snack, short=short, log=0)
+        return render_template('basket.html', pizza=list_pizza, snack=list_snack, short=short, log=0, title="Корзина")
 
 
 @app.route('/delete/<string:type>/<int:id>', methods=['GET', 'POST'])
