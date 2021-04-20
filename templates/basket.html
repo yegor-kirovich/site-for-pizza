@@ -8,7 +8,7 @@
                 <h2>{{ item[0].name}}</h2>
                 {% if item[1].size == "small"%}
                     <h3>Размер: маленькая пицца</h3>
-                {% elif item[1].size == "middle" %}
+                {% elif item[1].size == "medium" %}
                     <h3>Размер: средняя пицца</h3>
                 {% else %}
                     <h3>Размер: большая пицца</h3>
@@ -16,10 +16,16 @@
                 {% if item[1].dough == "normal"%}
                     <h3>Тип теста: Традиционное</h3>
                 {% elif item[1].dough == "thin" %}
-                    <h3>Тип теста: Тоннкое</h3>
+                    <h3>Тип теста: Тонкое</h3>
                 {% endif %}
                 <h3>Добавки: {{ item[2] }}</h3>
-                <h3>Сумма заказа: {{ item[3] }}</h3>
+                {% if item[1].size == "small"%}
+                    <h3>Сумма заказа: {{ item[3][0] }}</h3>
+                {% elif item[1].size == "medium" %}
+                    <h3>Сумма заказа: {{ item[3][1] }}</h3>
+                {% else %}
+                    <h3>Сумма заказа: {{ item[3][2] }}</h3>
+                {% endif %}
                 <button onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[1].id }}"'>Удалить</button>
             </div>
         {% endfor %}
@@ -58,7 +64,13 @@
                     <h3>Тип теста: Тонкое</h3>
                 {% endif %}
                 <h3>Добавки: {{ item[2] }}</h3>
-                <h3>Сумма заказа: {{ item[4] }}</h3>
+                {% if item[1].size == "small"%}
+                    <h3>Сумма заказа: {{ item[4][0] }}</h3>
+                {% elif item[1].size == "medium" %}
+                    <h3>Сумма заказа: {{ item[4][1] }}</h3>
+                {% else %}
+                    <h3>Сумма заказа: {{ item[4][2] }}</h3>
+                {% endif %}
                 <button onClick='location.href="http://127.0.0.1:5000/delete_log/pizza/{{ item[3] }}"'>Удалить</button>
             </div>
         {% endfor %}

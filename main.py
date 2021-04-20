@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from data.database.user import User
 from data.database.pizza_orders import Pizza_orders
 from data.database.supplements_price import Supplements_price
+from data.database.size_cost import Size_cost
 from data.Forms.Login import LoginForm
 from data.Forms.Registration import RegisterForm
 from data.Forms.Add_pizza import AddPizzaForm
@@ -167,47 +168,48 @@ def basket():
                     pizza.sauces = ", ".join(pizza_info["pizzas"][i]["sauces"])
                     pizza.user_id = current_user.id
                     db_sess.add(pizza)
-                    orders = session.get('orders', {'pizzas': [],
-                                                    'snacks': []})
-                    orders['pizzas'] = []
-                    session['orders'] = orders
-                    db_sess.commit()
+                orders = session.get('orders', {'pizzas': [],
+                                                'snacks': []})
+                orders['pizzas'] = []
+                session['orders'] = orders
+                db_sess.commit()
 
-                if session["orders"]["snacks"] != []:
-                    snacks = db_sess.query(Snacks_orders)
-                    a = []
-                    for i in snacks:
-                        a.append(i.id)
-                    if a == []:
-                        b = 0
-                    else:
-                        b = a[-1] + 1
-                    print(len(session["orders"]["snacks"]))
-                    for i in range(len(session["orders"]["snacks"])):
-                        snack = Snacks_orders()
-                        snack.id = b + i
-                        snack_info = session["orders"]
-                        snack.snack_id = snack_info["snacks"][i]["snack_id"]
-                        snack.user_id = current_user.id
-                        db_sess.add(snack)
-                        orders = session.get('orders', {'pizzas': [],
-                                                        'snacks': []})
-                        orders['snacks'] = []
-                        session['orders'] = orders
-                        db_sess.commit()
+            if session["orders"]["snacks"] != []:
+                snacks = db_sess.query(Snacks_orders)
+                a = []
+                for i in snacks:
+                    a.append(i.id)
+                if a == []:
+                    b = 0
+                else:
+                    b = a[-1] + 1
+                for i in range(len(session["orders"]["snacks"])):
+                    snack = Snacks_orders()
+                    snack.id = b + i
+                    snack_info = session["orders"]
+                    snack.snack_id = snack_info["snacks"][i]["snack_id"]
+                    snack.user_id = current_user.id
+                    db_sess.add(snack)
+                orders = session.get('orders', {'pizzas': [],
+                                                'snacks': []})
+                orders['snacks'] = []
+                session['orders'] = orders
+                db_sess.commit()
 
         for pizza in db_sess.query(Pizza_orders).filter(Pizza_orders.user_id == current_user.id):
             for i in db_sess.query(Pizza).filter(Pizza.id == pizza.pizza_id):
                 supl = []
                 sum = 0
-                for j in pizza.supplements.split(", "):
-                    sup = db_sess.query(Supplements_price).filter(Supplements_price.id == j).first()
-                    sum += sup.cost
-                    supl.append(sup.name)
+                costs = db_sess.query(Size_cost).filter(Size_cost.id == i.id).first()
+                if pizza.supplements != "":
+                    for j in pizza.supplements.split(", "):
+                        sup = db_sess.query(Supplements_price).filter(Supplements_price.id == j).first()
+                        sum += sup.cost
+                        supl.append(sup.name)
                 if dis == 0:
-                    pizza_list.append((i, pizza, ", ".join(supl), i.cost + sum))
+                    pizza_list.append((i, pizza, ", ".join(supl), [costs.small_size + sum, costs.med_size + sum, costs.big_size + sum]))
                 else:
-                    pizza_list.append((i, pizza, ", ".join(supl), i.dis_cost + sum))
+                    pizza_list.append((i, pizza, ", ".join(supl), [costs.small_size_dis + sum, costs.med_size_dis + sum, costs.big_size_dis + sum]))
         for snack in db_sess.query(Snacks_orders).filter(Snacks_orders.user_id == current_user.id):
             for i in db_sess.query(Snack).filter(Snack.id == snack.snack_id):
                 snack_list.append((i, snack.id))
@@ -227,10 +229,11 @@ def basket():
                 sup = db_sess.query(Supplements_price).filter(Supplements_price.id == j).first()
                 sum += sup.cost
                 supl.append(sup.name)
+            costs = db_sess.query(Size_cost).filter(Size_cost.id == p.id).first()
             if dis == 0:
-                list_pizza.append([i, p, ", ".join(supl), a, p.cost + sum])
+                list_pizza.append([i, p, ", ".join(supl), a, [costs.small_size + sum, costs.med_size + sum, costs.big_size + sum]])
             else:
-                list_pizza.append([i, p, ", ".join(supl), a, p.dis_cost + sum])
+                list_pizza.append([i, p, ", ".join(supl), a, [costs.small_size_dis + sum, costs.med_size_dis + sum, costs.big_size_dis + sum]])
         a = -1
         for i in snack:
             a += 1
