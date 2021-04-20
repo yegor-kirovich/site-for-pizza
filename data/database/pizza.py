@@ -1,5 +1,5 @@
 import sqlalchemy
-from .db_session import SqlAlchemyBase
+from data.Standart.db_session import SqlAlchemyBase
 
 
 class Pizza(SqlAlchemyBase):

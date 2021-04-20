@@ -6,12 +6,20 @@
             <div class="basket">
                 <img src="{{ short }}pizzas/{{ item[0].href }}">
                 <h2>{{ item[0].name}}</h2>
-                <h2>{{ item[1].size}}</h2>
-                <h2>{{ item[1].dough}}</h2>
-                {% for i in item[2] %}
-                    <h2>{{ i }}</h2>
-                {% endfor %}
-                <h2>Сумма заказа: {{ item[3] }}</h2>
+                {% if item[1].size == "small"%}
+                    <h3>Размер: маленькая пицца</h3>
+                {% elif item[1].size == "middle" %}
+                    <h3>Размер: средняя пицца</h3>
+                {% else %}
+                    <h3>Размер: большая пицца</h3>
+                {% endif %}
+                {% if item[1].dough == "normal"%}
+                    <h3>Тип теста: Традиционное</h3>
+                {% elif item[1].dough == "thin" %}
+                    <h3>Тип теста: Тоннкое</h3>
+                {% endif %}
+                <h3>Добавки: {{ item[2] }}</h3>
+                <h3>Сумма заказа: {{ item[3] }}</h3>
                 <button onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[1].id }}"'>Удалить</button>
             </div>
         {% endfor %}
@@ -20,14 +28,14 @@
                 <div class="basket">
                     <img src="{{ short }}snacks/{{ item[0].href }}">
                     <h2>{{ item[0].name}}</h2>
-                    <h2>{{ item[0].cost}}</h2>
+                    <h3>Сумма заказа: {{ item[0].cost}}</h3>
                     <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
                 </div>
             {% else %}
                 <div class="basket">
                     <img src="{{ short }}drinks/{{ item[0].href }}">
                     <h2>{{ item[0].name}}</h2>
-                    <h2>{{ item[0].cost}}</h2>
+                    <h3>Сумма заказа: {{ item[0].cost}}</h3>
                     <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
                 </div>
             {% endif %}
@@ -36,13 +44,21 @@
         {% for item in pizza %}
             <div class="basket">
                 <img src="{{ short }}pizzas/{{ item[1].href }}">
-                <h2>{{ item[1].name }}</h2>
-                <h2>{{ item[1].size}}</h2>
-                <h2>{{ item[1].dough}}</h2>
-                {% for i in item[2] %}
-                    <h2>{{ i }}</h2>
-                {% endfor %}
-                <h2>Сумма заказа: {{ item[4] }}</h2>
+                <h2>{{ item[1].name}}</h2>
+                {% if item[0]["size"] == "small"%}
+                    <h3>Размер: маленькая пицца</h3>
+                {% elif item[0]["size"] == "middle" %}
+                    <h3>Размер: средняя пицца</h3>
+                {% else %}
+                    <h3>Размер: большая пицца</h3>
+                {% endif %}
+                {% if item[0]["dough"] == "normal"%}
+                    <h3>Тип теста: Традиционное</h3>
+                {% elif item[0]["dough"] == "thin" %}
+                    <h3>Тип теста: Тонкое</h3>
+                {% endif %}
+                <h3>Добавки: {{ item[2] }}</h3>
+                <h3>Сумма заказа: {{ item[4] }}</h3>
                 <button onClick='location.href="http://127.0.0.1:5000/delete_log/pizza/{{ item[3] }}"'>Удалить</button>
             </div>
         {% endfor %}
@@ -51,14 +67,14 @@
                 <div class="basket">
                     <img src="{{ short }}snacks/{{ item[1].href }}">
                     <h2>{{ item[1].name }}</h2>
-                    <h2>{{ item[1].cost }}</h2>
+                    <h3>Сумма заказа: {{ item[1].cost }}</h3>
                     <button onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>Удалить</button>
                 </div>
             {% else %}
                 <div class="basket">
                     <img src="{{ short }}drinks/{{ item[1].href }}">
                     <h2>{{ item[1].name }}</h2>
-                    <h2>{{ item[1].cost }}</h2>
+                    <h3>Сумма заказа: {{ item[1].cost }}</h3>
                     <button onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>Удалить</button>
                 </div>
             {% endif %}
