@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, RadioField, SubmitField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired
-from data import db_session
-from data.supplements_price import Supplements_price
-from data.sauces_db import Sauces
+from data.Standart import db_session
+from data.database.supplements_price import Supplements_price
+from data.database.sauces_db import Sauces
 
 
 db_session.global_init("db/pizzeria.db")

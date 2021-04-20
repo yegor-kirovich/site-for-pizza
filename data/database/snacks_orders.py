@@ -1,6 +1,6 @@
 import sqlalchemy
 from sqlalchemy import orm
-from .db_session import SqlAlchemyBase
+from data.Standart.db_session import SqlAlchemyBase
 
 
 class Snacks_orders(SqlAlchemyBase):

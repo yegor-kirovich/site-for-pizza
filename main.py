@@ -1,15 +1,15 @@
 from flask import Flask, render_template, session, redirect, url_for, abort
-from data import db_session
-from data.pizza import Pizza
+from data.Standart import db_session
+from data.database.pizza import Pizza
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from data.user import User
-from data.pizza_orders import Pizza_orders
-from data.supplements_price import Supplements_price
+from data.database.user import User
+from data.database.pizza_orders import Pizza_orders
+from data.database.supplements_price import Supplements_price
 from data.Forms.Login import LoginForm
 from data.Forms.Registration import RegisterForm
 from data.Forms.Add_pizza import AddPizzaForm
-from data.snacks import Snack
-from data.snacks_orders import Snacks_orders
+from data.database.snacks import Snack
+from data.database.snacks_orders import Snacks_orders
 
 db_session.global_init("db/pizzeria.db")
 
@@ -40,10 +40,10 @@ def main_menu():
         dis = 1
         return render_template("main.html", pizza=pizza,
                                short=short, discount=1, snack=snack,
-                               css=url_for('static', filename='style.css'), title='Пиццерия')
+                               css=url_for('static', filename='css/main.css'), title='Пиццерия')
     dis = 0
     return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack,
-                           css=url_for('static', filename='style.css'), title='Пиццерия')
+                           css=url_for('static', filename='css/main.css'), title='Пиццерия')
 
 
 @app.route('/add_pizza/<int:pizza_id>', methods=['GET', 'POST'])
@@ -205,9 +205,9 @@ def basket():
                     sum += sup.cost
                     supl.append(sup.name)
                 if dis == 0:
-                    pizza_list.append((i, pizza, supl, i.cost + sum))
+                    pizza_list.append((i, pizza, ", ".join(supl), i.cost + sum))
                 else:
-                    pizza_list.append((i, pizza, supl, i.dis_cost + sum))
+                    pizza_list.append((i, pizza, ", ".join(supl), i.dis_cost + sum))
         for snack in db_sess.query(Snacks_orders).filter(Snacks_orders.user_id == current_user.id):
             for i in db_sess.query(Snack).filter(Snack.id == snack.snack_id):
                 snack_list.append((i, snack.id))
@@ -221,7 +221,6 @@ def basket():
         for i in pizza:
             a += 1
             p = db_sess.query(Pizza).filter(Pizza.id == i["pizza_id"]).first()
-            print(i["supplements"])
             sum = 0
             supl = []
             for j in i["supplements"]:
@@ -229,9 +228,9 @@ def basket():
                 sum += sup.cost
                 supl.append(sup.name)
             if dis == 0:
-                list_pizza.append([i, p, supl, a, p.cost + sum])
+                list_pizza.append([i, p, ", ".join(supl), a, p.cost + sum])
             else:
-                list_pizza.append([i, p, supl, a, p.dis_cost + sum])
+                list_pizza.append([i, p, ", ".join(supl), a, p.dis_cost + sum])
         a = -1
         for i in snack:
             a += 1
