@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(class="form-control", type="email") }}<br>
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.phone_number.label }}<br>
+            {{ form.phone_number(class="form-control", type="phone_number") }}<br>
+            {% for error in form.phone_number.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.address.label }}<br>
+            {{ form.address(class="form-control", type="address") }}<br>
+            {% for error in form.address.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+{% endblock %}
