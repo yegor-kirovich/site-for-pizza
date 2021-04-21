@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <link rel="stylesheet" href="/static/css/main.css">
     {% if discount == 1 %}
         <div class="alert">
             <h3 class="text">Поздравляю! Вы получили 10% скидку</h3>
@@ -33,23 +34,66 @@
     <div class="par">
         <center>Закуски</center>
     </div>
-
+    <style>
+        .snack_div{
+        display: inline-block;
+        vertical-align: middle;
+        border: 2px solid black;
+        width: 21%;
+        height: 500px;
+        border-radius: 15px;
+        box-shadow: 1px 1px 2px #000000;
+        border-color: #ffffff;
+        margin-left: 2.7%;
+        margin-bottom: 14px;
+        }
+        .counter{
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
+        }
+        .text-counter{
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
+        }
+        .submit{
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 140px;
+        border: 1px solid black;
+        border-radius: 15px;
+        box-shadow: 0px 0px 0px #000000;
+        }
+    </style>
     {% for item in snack %}
         {% if item.type == "snack" %}
             {% if discount == 1 %}
-                <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
+                <div class="snack_div">
                     <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
                     <strike class="pizza_cost">{{ item.cost }} тг.</strike>
                     <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
+                    <div class="counter-div">
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
+                        <h5 class="text-counter">{{ count[item.id] }}</h5>
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
+                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
+                    </div>
                 </div>
             {% else %}
-                <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
+                <div class="pizza_div">
                     <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
                     <h5 class="pizza_cost">{{ item.cost }} тг.</h5>
+                    <div class="counter-div">
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
+                        <h5 class="text-counter">{{ count[item.id] }}</h5>
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
+                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
+                    </div>
                 </div>
             {% endif %}
         {% endif %}
@@ -67,7 +111,13 @@
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
                     <strike class="pizza_cost">{{ item.cost }} тг.</strike>
-                    <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
+                    <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>\
+                    <div class="counter-div">
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
+                        <h5 class="text-counter">{{ count[item.id] }}</h5>
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
+                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
+                    </div>
                 </div>
             {% else %}
                 <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
@@ -75,6 +125,12 @@
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
                     <h5 class="pizza_cost">{{ item.cost }} тг.</h5>
+                    <div class="counter-div">
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
+                        <h5 class="text-counter">{{ count[item.id] }}</h5>
+                        <button class="counter" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
+                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
+                    </div>
                 </div>
             {% endif %}
         {% endif %}
