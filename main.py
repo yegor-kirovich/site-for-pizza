@@ -26,6 +26,10 @@ login_manager.init_app(app)
 
 dis = False
 
+a = {}
+for i in range(1, 60):
+    a[i] = 1
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -35,19 +39,18 @@ def load_user(user_id):
 
 @app.route('/')
 def main_menu():
-    global dis
+    global dis, a
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza)
     snack = db_sess.query(Snack)
     short = "static/img/"
+    cou = a
     if current_user.is_authenticated and (current_user.count_orders % 10 == 0):
         dis = True
         return render_template("main.html", pizza=pizza,
-                               short=short, discount=1, snack=snack,
-                               css=url_for('static', filename='css/main.css'), title='Пиццерия')
+                               short=short, discount=1, snack=snack, title='Пиццерия', cou=cou)
     dis = False
-    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack,
-                           css=url_for('static', filename='css/main.css'), title='Пиццерия')
+    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack, title='Пиццерия', cou=cou)
 
 
 @app.route('/add_pizza/<int:pizza_id>', methods=['GET', 'POST'])
@@ -83,17 +86,20 @@ def add_pizza(pizza_id):
 
 @app.route('/add_snack/<int:snack_id>')
 def add_snack(snack_id):
+    global a
     db_sess = db_session.create_session()
-    order_snack = Snacks_orders()
     if current_user.is_authenticated:
-        order_snack.snack_id = snack_id
-        current_user.snacks_orders.append(order_snack)
-        db_sess.merge(current_user)
+        for _ in range(a[snack_id]):
+            order_snack = Snacks_orders()
+            order_snack.snack_id = snack_id
+            current_user.snacks_orders.append(order_snack)
+            db_sess.merge(current_user)
         db_sess.commit()
     else:
         orders = session.get('orders', {'pizzas': [],
                                         'snacks': []})
-        orders['snacks'].append({'snack_id': snack_id})
+        for _ in range(a[snack_id]):
+            orders['snacks'].append({'snack_id': snack_id})
         session['orders'] = orders
     return redirect('/')
 
@@ -488,6 +494,21 @@ def delete_log(id, type):
         del orders["snacks"][id]
         session['orders'] = orders
     return redirect('/basket')
+
+
+@app.route('/add_num/<int:id>')
+def add_num(id):
+    global a
+    a[id] += 1
+    return redirect('/')
+
+
+@app.route('/delete_num/<int:id>')
+def delete_num(id):
+    global a
+    if a[id] != 1:
+        a[id] -= 1
+    return redirect('/')
 
 
 @app.route('/logout')
