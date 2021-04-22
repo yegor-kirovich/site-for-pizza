@@ -39,10 +39,8 @@ def main_menu():
     pizza = db_sess.query(Pizza)
     snack = db_sess.query(Snack)
     visits_count = session.get('visits_count', 0)
-    session['visits_count'] = visits_count + 1
-    short = "static/img/"
     count = a
-    if session['visits_count'] > 10:
+    if current_user.is_authenticated and (current_user.count_orders % 10 == 0):
         dis = 1
         print(url_for('static', filename='css/main.css'))
         return render_template("main.html", pizza=pizza,

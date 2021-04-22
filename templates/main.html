@@ -83,7 +83,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="pizza_div">
+                <div class="snack_div">
                     <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
@@ -106,7 +106,7 @@
     {% for item in snack %}
         {% if item.type == "drink" %}
             {% if discount == 1 %}
-                <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
+                <div class="snack_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
                     <img class="pizza_img" src="{{ short }}drinks/{{ item.href }}">
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
@@ -120,7 +120,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
+                <div class="snack_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
                     <img class="pizza_img" src="{{ short }}drinks/{{ item.href }}">
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
