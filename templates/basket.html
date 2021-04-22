@@ -34,14 +34,14 @@
                 <div class="basket">
                     <img src="{{ short }}snacks/{{ item[0].href }}">
                     <h2>{{ item[0].name}}</h2>
-                    <h3>Сумма заказа: {{ item[0].cost}}</h3>
+                    <h3>Сумма заказа: {{ item[2]}}</h3>
                     <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
                 </div>
             {% else %}
                 <div class="basket">
                     <img src="{{ short }}drinks/{{ item[0].href }}">
                     <h2>{{ item[0].name}}</h2>
-                    <h3>Сумма заказа: {{ item[0].cost}}</h3>
+                    <h3>Сумма заказа: {{ item[2]}}</h3>
                     <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
                 </div>
             {% endif %}
