@@ -217,8 +217,11 @@ def basket():
                     pizza_list.append((i, pizza, ", ".join(supl), [costs.small_size_dis + sum, costs.med_size_dis + sum, costs.big_size_dis + sum]))
         for snack in db_sess.query(Snacks_orders).filter(Snacks_orders.user_id == current_user.id):
             for i in db_sess.query(Snack).filter(Snack.id == snack.snack_id):
-                snack_list.append((i, snack.id))
-        return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1, title="Корзина")
+                if dis == 0:
+                    snack_list.append((i, snack.id, i.cost))
+                else:
+                    snack_list.append((i, snack.id, i.dis_cost))
+        return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1, title="Корзина", dis=dis)
     else:
         pizza = session["orders"]["pizzas"]
         snack = session["orders"]["snacks"]
