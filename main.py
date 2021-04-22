@@ -39,10 +39,8 @@ def main_menu():
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza)
     snack = db_sess.query(Snack)
-    visits_count = session.get('visits_count', 0)
-    session['visits_count'] = visits_count + 1
     short = "static/img/"
-    if session['visits_count'] > 10:
+    if current_user.is_authenticated and (current_user.count_orders % 10 == 0):
         dis = True
         return render_template("main.html", pizza=pizza,
                                short=short, discount=1, snack=snack,
@@ -150,6 +148,8 @@ def login():
 
 @app.route('/send_mail', methods=['GET', 'POST'])
 def send_check():
+    global dis
+
     if current_user.is_authenticated:
         db_sess = db_session.create_session()
         address = db_sess.query(User).get(current_user.id).address
@@ -229,6 +229,7 @@ def send_check():
 
         text += f'\nИтого: {total_cost} тенге\n\nВаш заказ будет доставлен по адресу: {address}\nПриятного аппетита!'
         if send_mail(email, 'Спасибо за заказ!', text):
+            dis = False
             current_user.count_orders += 1
             db_sess.merge(current_user)
 
