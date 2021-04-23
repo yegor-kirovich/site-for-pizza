@@ -12,6 +12,7 @@ from data.Forms.Login import LoginForm
 from data.Forms.Registration import RegisterForm
 from data.Forms.Add_pizza import AddPizzaForm
 from data.Forms.Get_user_info import EmailForm
+from data.Forms.Admin_Rights import AdminPizzaForm
 from data.database.snacks import Snack
 from data.database.snacks_orders import Snacks_orders
 
@@ -27,7 +28,7 @@ login_manager.init_app(app)
 dis = False
 
 a = {}
-for i in range(1, 60):
+for i in range(1, 63):
     a[i] = 1
 
 
@@ -509,6 +510,107 @@ def delete_num(id):
     if a[id] != 1:
         a[id] -= 1
     return redirect('/')
+
+
+@app.route('/admin_profile', methods=['GET', 'POST'])
+def admin_profile_page():
+    form = AdminPizzaForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        if form.type.data == 'pizzas':
+            pizza = db_sess.query(Pizza)
+            a = list()
+            for i in pizza:
+                a.append(i.id)
+            if not a:
+                b = 0
+            else:
+                b = a[-1] + 1
+            pizza_cost = Size_cost()
+            pizza_cost.id = b
+            pizza_cost.med_size = form.cost.data
+            pizza_cost.small_size = int(form.cost.data) - 1000
+            pizza_cost.big_size = int(form.cost.data) + 1000
+            pizza_cost.med_size_dis = form.cost.data * 0.9
+            pizza_cost.small_size_dis = (int(form.cost.data) - 1000) * 0.9
+            pizza_cost.big_size_dis = (int(form.cost.data) + 1000) * 0.9
+            pizza = Pizza()
+            pizza.id = b
+            pizza.name = form.name.data
+            pizza.cost = form.cost.data
+            pizza.dis_cost = form.cost.data * 0.9
+            pizza.about = form.about.data
+            f = form.photo.data.read()
+            with open(f'static/img/{form.type.data}/{form.name.data}.jpg', 'wb') as i:
+                i.write(f)
+            pizza.href = f'{form.name.data}.jpg'
+            db_sess.merge(pizza)
+        elif form.type.data == 'snacks':
+            snack = db_sess.query(Snack)
+            a = list()
+            for i in snack:
+                a.append(i.id)
+            if not a:
+                b = 0
+            else:
+                b = a[-1] + 1
+            snack = Snack()
+            snack.id = b
+            snack.name = form.name.data
+            snack.cost = form.cost.data
+            snack.dis_cost = form.cost.data * 0.9
+            snack.about = form.about.data
+            snack.type = 'snack'
+            f = form.photo.data.read()
+            with open(f'static/img/{form.type.data}/{form.name.data}.jpg', 'wb') as i:
+                i.write(f)
+            snack.href = f'{form.name.data}.jpg'
+            db_sess.merge(snack)
+        elif form.type.data == 'drinks':
+            snack = db_sess.query(Snack)
+            a = list()
+            for i in snack:
+                a.append(i.id)
+            if not a:
+                b = 0
+            else:
+                b = a[-1] + 1
+            snack = Snack()
+            snack.id = b
+            snack.name = form.name.data
+            snack.cost = form.cost.data
+            snack.dis_cost = form.cost.data * 0.9
+            snack.about = form.about.data
+            snack.type = 'drink'
+            f = form.photo.data.read()
+            with open(f'static/img/{form.type.data}/{form.name.data}.jpg', 'wb') as i:
+                i.write(f)
+            snack.href = f'{form.name.data}.jpg'
+            db_sess.merge(snack)
+        db_sess.commit()
+        return redirect("/")
+    return render_template('admin.html', title='Профиль Админа', form=form)
+
+
+@app.route('/delete_bd/<string:type>/<int:id>')
+def delete_bd(type, id):
+    db_sess = db_session.create_session()
+    if type == "pizza":
+        pizza = db_sess.query(Pizza).filter(Pizza.id == id).first()
+        if pizza:
+            db_sess.delete(pizza)
+            db_sess.commit()
+        else:
+            abort(404)
+        return redirect('/')
+    if type == "snack":
+        snack = db_sess.query(Snack).filter(Snack.id == id).first()
+        if snack:
+            db_sess.delete(snack)
+            db_sess.commit()
+        else:
+            abort(404)
+        return redirect('/')
 
 
 @app.route('/logout')

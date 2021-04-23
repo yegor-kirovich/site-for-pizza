@@ -1,93 +1,118 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <link rel="stylesheet" href="/static/css/basket.css">
     {% if log == 1 %}
         {% for item in pizza %}
-            <div class="basket">
-                <img src="{{ short }}pizzas/{{ item[0].href }}">
-                <h2>{{ item[0].name}}</h2>
-                {% if item[1].size == "small"%}
-                    <h3>Размер: маленькая пицца</h3>
-                {% elif item[1].size == "medium" %}
-                    <h3>Размер: средняя пицца</h3>
-                {% else %}
-                    <h3>Размер: большая пицца</h3>
-                {% endif %}
-                {% if item[1].dough == "normal"%}
-                    <h3>Тип теста: Традиционное</h3>
-                {% elif item[1].dough == "thin" %}
-                    <h3>Тип теста: Тонкое</h3>
-                {% endif %}
-                <h3>Добавки: {{ item[2] }}</h3>
-                {% if item[1].size == "small"%}
-                    <h3>Цена: {{ item[3][0] }}</h3>
-                {% elif item[1].size == "medium" %}
-                    <h3>Цена: {{ item[3][1] }}</h3>
-                {% else %}
-                    <h3>Цена: {{ item[3][2] }}</h3>
-                {% endif %}
-                <button onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[1].id }}"'>Удалить</button>
+            <div class="basket_div">
+                <img class="image_piz" src="{{ short }}pizzas/{{ item[0].href }}">
+                <div class="about">
+                    <h2>{{ item[0].name}}</h2>
+                    {% if item[1].size == "small"%}
+                        <h3>Размер: маленькая пицца</h3>
+                    {% elif item[1].size == "medium" %}
+                        <h3>Размер: средняя пицца</h3>
+                    {% else %}
+                        <h3>Размер: большая пицца</h3>
+                    {% endif %}
+                    {% if item[1].dough == "normal"%}
+                        <h3>Тип теста: Традиционное</h3>
+                    {% elif item[1].dough == "thin" %}
+                        <h3>Тип теста: Тонкое</h3>
+                    {% endif %}
+                    <h3>Добавки: {{ item[2] }}</h3>
+                    {% if item[1].size == "small"%}
+                        <h3>Цена: {{ item[3][0] }}</h3>
+                    {% elif item[1].size == "medium" %}
+                        <h3>Цена: {{ item[3][1] }}</h3>
+                    {% else %}
+                        <h3>Цена: {{ item[3][2] }}</h3>
+                    {% endif %}
+                </div>
+                <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[1].id }}"'>
+                    <img class="delete_piz" src="/static/icon/delete.png">
+                </div>
             </div>
         {% endfor %}
         {% for item in snack %}
             {% if item[0].type == "snack" %}
-                <div class="basket">
-                    <img src="{{ short }}snacks/{{ item[0].href }}">
-                    <h2>{{ item[0].name}}</h2>
-                    <h3>Цена: {{ item[0].cost}}</h3>
-                    <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
+                <div class="basket_div">
+                    <img class="image_piz" src="{{ short }}snacks/{{ item[0].href }}">
+                    <div class="about">
+                        <h2>{{ item[0].name}}</h2>
+                        <h3>Цена: {{ item[0].cost}}</h3>
+                    </div>
+                    <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>
+                        <img class="delete_piz" src="/static/icon/delete.png">
+                    </div>
                 </div>
             {% else %}
-                <div class="basket">
-                    <img src="{{ short }}drinks/{{ item[0].href }}">
-                    <h2>{{ item[0].name}}</h2>
-                    <h3>Цена: {{ item[0].cost}}</h3>
-                    <button onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>Удалить</button>
+                <div class="basket_div">
+                    <img class="image_piz" src="{{ short }}drinks/{{ item[0].href }}">
+                    <div class="about">
+                        <h2>{{ item[0].name}}</h2>
+                        <h3>Цена: {{ item[0].cost}}</h3>
+                    </div>
+                    <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>
+                        <img class="delete_piz" src="/static/icon/delete.png">
+                    </div>
                 </div>
             {% endif %}
         {% endfor %}
     {% else %}
         {% for item in pizza %}
-            <div class="basket">
-                <img src="{{ short }}pizzas/{{ item[1].href }}">
-                <h2>{{ item[1].name}}</h2>
-                {% if item[0]["size"] == "small"%}
-                    <h3>Размер: маленькая пицца</h3>
-                {% elif item[0]["size"] == "middle" %}
-                    <h3>Размер: средняя пицца</h3>
-                {% else %}
-                    <h3>Размер: большая пицца</h3>
-                {% endif %}
-                {% if item[0]["dough"] == "normal"%}
-                    <h3>Тип теста: Традиционное</h3>
-                {% elif item[0]["dough"] == "thin" %}
-                    <h3>Тип теста: Тонкое</h3>
-                {% endif %}
-                <h3>Добавки: {{ item[2] }}</h3>
-                {% if item[1].size == "small"%}
-                    <h3>Цена: {{ item[4][0] }}</h3>
-                {% elif item[1].size == "medium" %}
-                    <h3>Цена: {{ item[4][1] }}</h3>
-                {% else %}
-                    <h3>Цена: {{ item[4][2] }}</h3>
-                {% endif %}
-                <button onClick='location.href="http://127.0.0.1:5000/delete_log/pizza/{{ item[3] }}"'>Удалить</button>
+            <div class="basket_div">
+                <img class="image_piz" src="{{ short }}pizzas/{{ item[1].href }}">
+                <div class="basket">
+                    <h2>{{ item[1].name}}</h2>
+                    {% if item[0]["size"] == "small"%}
+                        <h3>Размер: маленькая пицца</h3>
+                    {% elif item[0]["size"] == "middle" %}
+                        <h3>Размер: средняя пицца</h3>
+                    {% else %}
+                        <h3>Размер: большая пицца</h3>
+                    {% endif %}
+                    {% if item[0]["dough"] == "normal"%}
+                        <h3>Тип теста: Традиционное</h3>
+                    {% elif item[0]["dough"] == "thin" %}
+                        <h3>Тип теста: Тонкое</h3>
+                    {% endif %}
+                    <h3>Добавки: {{ item[2] }}</h3>
+                    {% if item[1].size == "small"%}
+                        <h3>Цена: {{ item[4][0] }}</h3>
+                    {% elif item[1].size == "medium" %}
+                        <h3>Цена: {{ item[4][1] }}</h3>
+                    {% else %}
+                        <h3>Цена: {{ item[4][2] }}</h3>
+                    {% endif %}
+                </div>
+                <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[3] }}"'>
+                    <img class="delete_piz" src="/static/icon/delete.png">
+                </div>
             </div>
         {% endfor %}
         {% for item in snack %}
             {% if item[1].type == "snack" %}
-                <div class="basket">
-                    <img src="{{ short }}snacks/{{ item[1].href }}">
-                    <h2>{{ item[1].name }}</h2>
-                    <h3>Цена: {{ item[1].cost }}</h3>
-                    <button onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>Удалить</button>
+                <div class="basket_div">
+                    <img class="image_piz" src="{{ short }}snacks/{{ item[1].href }}">
+                    <div class="about">
+                        <h2>{{ item[1].name }}</h2>
+                        <h3>Цена: {{ item[1].cost }}</h3>
+                    </div>
+                    <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>
+                        <img class="delete_piz" src="/static/icon/delete.png">
+                    </div>
                 </div>
             {% else %}
-                <div class="basket">
-                    <img src="{{ short }}drinks/{{ item[1].href }}">
-                    <h2>{{ item[1].name }}</h2>
-                    <h3>Цена: {{ item[1].cost }}</h3>
-                    <button onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>Удалить</button>
+                <div class="basket_div">
+                    <img class="image_piz" src="{{ short }}drinks/{{ item[1].href }}">
+                    <div class="about">
+                        <h2>{{ item[1].name }}</h2>
+                        <h3>Цена: {{ item[1].cost }}</h3>
+                    </div>
+                    <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete_log/snack/{{ item[2] }}"'>
+                        <img class="delete_piz" src="/static/icon/delete.png">
+                    </div>
                 </div>
             {% endif %}
         {% endfor %}

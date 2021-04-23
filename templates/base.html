@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/css/base.css">
     <title>{{title}}</title>
     <link href="static/icon/pizza_icon.ico" rel="shortcut icon">
 </head>
@@ -9,12 +10,21 @@
 <header>
     <nav class="navbar">
         {% if current_user.is_authenticated %}
-            <p>
-                <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
-                <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
-                <button class="prof" onClick='location.href="http://127.0.0.1:5000/profile"'>{{ current_user.name }}</button>
-                <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
-            </p>
+            {% if current_user.name != "admin" %}
+                <p>
+                    <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
+                    <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
+                    <button class="prof" onClick='location.href="http://127.0.0.1:5000/profile"'>{{ current_user.name }}</button>
+                    <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
+                </p>
+            {% else %}
+                <p>
+                    <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
+                    <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
+                    <button class="prof" onClick='location.href="http://127.0.0.1:5000/admin_profile"'>Админки Хуинки</button>
+                    <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
+                </p>
+            {% endif %}
         {% else %}
             <p>
                 <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
