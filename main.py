@@ -514,6 +514,11 @@ def delete_num(id):
 
 @app.route('/admin_profile', methods=['GET', 'POST'])
 def admin_profile_page():
+    if current_user.is_authenticated:
+        if current_user.name != 'admin':
+            return redirect('/')
+    else:
+        return redirect('/')
     form = AdminPizzaForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
