@@ -15,13 +15,13 @@
                     <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
                     <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
                     <button class="prof" onClick='location.href="http://127.0.0.1:5000/profile"'>{{ current_user.name }}</button>
+                    <button class="about_" onClick='location.href="http://127.0.0.1:5000/about"'>О нас</button>
                     <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
                 </p>
             {% else %}
                 <p>
                     <button class="main" onClick='location.href="http://127.0.0.1:5000/"'>Главное меню</button>
-                    <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
-                    <button class="prof" onClick='location.href="http://127.0.0.1:5000/admin_profile"'>Админки Хуинки</button>
+                    <button class="prof" onClick='location.href="http://127.0.0.1:5000/admin_profile"'>Добавить Пиццу</button>
                     <button class="logout" onClick='location.href="http://127.0.0.1:5000/logout"'>Выйти</button>
                 </p>
             {% endif %}
@@ -31,6 +31,7 @@
                 <button class="basket" onClick='location.href="http://127.0.0.1:5000/basket"'>Корзина</button>
                 <button class="reg" onClick='location.href="http://127.0.0.1:5000/register"'>Зарегистрироваться</button>
                 <button class="log" onClick='location.href="http://127.0.0.1:5000/login"'>Войти</button>
+                <button class="about_" onClick='location.href="http://127.0.0.1:5000/about"'>О нас</button>
             </p>
         {% endif %}
     </nav>

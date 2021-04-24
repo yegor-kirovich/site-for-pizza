@@ -592,6 +592,11 @@ def admin_profile_page():
     return render_template('admin.html', title='Профиль Админа', form=form)
 
 
+@app.route('/about')
+def about():
+    return render_template('map.html', title='Про нас')
+
+
 @app.route('/delete_bd/<string:type>/<int:id>')
 def delete_bd(type, id):
     db_sess = db_session.create_session()
