@@ -337,7 +337,7 @@ def send_check():
                 return redirect('/')
             return f'При отправке сообщения на адрес {form.email.data} произошла ошибка<br><a ' \
                    f'href="http://127.0.0.1:5000/">На главную</a>'
-        return render_template('get_user_info.html', form=form)
+        return render_template('get_user_info.html', form=form, title='Оформление заказа')
 
 
 @app.route('/basket')
