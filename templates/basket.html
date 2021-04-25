@@ -40,7 +40,11 @@
                     <img class="image_piz" src="{{ short }}snacks/{{ item[0].href }}">
                     <div class="about">
                         <h2>{{ item[0].name}}</h2>
-                        <h3>Цена: {{ item[0].cost}}</h3>
+                        {% if dis %}
+                            <h3>Цена: {{ item[0].dis_cost }}</h3>
+                        {% else %}
+                            <h3>Цена: {{ item[0].cost }}</h3>
+                        {% endif %}
                     </div>
                     <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>
                         <img class="delete_piz" src="/static/icon/delete.png">
@@ -51,7 +55,11 @@
                     <img class="image_piz" src="{{ short }}drinks/{{ item[0].href }}">
                     <div class="about">
                         <h2>{{ item[0].name}}</h2>
-                        <h3>Цена: {{ item[0].cost}}</h3>
+                        {% if dis %}
+                            <h3>Цена: {{ item[0].dis_cost }}</h3>
+                        {% else %}
+                            <h3>Цена: {{ item[0].cost }}</h3>
+                        {% endif %}
                     </div>
                     <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/snack/{{ item[1] }}"'>
                         <img class="delete_piz" src="/static/icon/delete.png">
@@ -67,7 +75,7 @@
                     <h2>{{ item[1].name}}</h2>
                     {% if item[0]["size"] == "small"%}
                         <h3>Размер: маленькая пицца</h3>
-                    {% elif item[0]["size"] == "middle" %}
+                    {% elif item[0]["size"] == "medium" %}
                         <h3>Размер: средняя пицца</h3>
                     {% else %}
                         <h3>Размер: большая пицца</h3>
@@ -78,15 +86,15 @@
                         <h3>Тип теста: Тонкое</h3>
                     {% endif %}
                     <h3>Добавки: {{ item[2] }}</h3>
-                    {% if item[1].size == "small"%}
+                    {% if item[0]["size"] == "small"%}
                         <h3>Цена: {{ item[4][0] }}</h3>
-                    {% elif item[1].size == "medium" %}
+                    {% elif item[0]["size"] == "medium" %}
                         <h3>Цена: {{ item[4][1] }}</h3>
                     {% else %}
                         <h3>Цена: {{ item[4][2] }}</h3>
                     {% endif %}
                 </div>
-                <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete/pizza/{{ item[3] }}"'>
+                <div class="delete" onClick='location.href="http://127.0.0.1:5000/delete_log/pizza/{{ item[3] }}"'>
                     <img class="delete_piz" src="/static/icon/delete.png">
                 </div>
             </div>

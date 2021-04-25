@@ -199,7 +199,7 @@ def send_check():
                 dough = 'Тонкое'
 
             text += f'\n---------------------------------------\nПицца: {pizza.name}\nРазмер: {size}\n' \
-                    f'Тесто: {dough}\nЦена: {pizza_cost}'
+                    f'Тесто: {dough}\nЦена: {pizza_cost} тенге'
 
             if i.supplements:
                 text += '\n\nДобавки:\n\n'
@@ -221,11 +221,19 @@ def send_check():
         for i in snacks_order:
             snack = db_sess.query(Snack).get(i.snack_id)
             if snack.type == 'snack':
-                snacks.append(f'{snack.name} - {snack.cost} тг.')
-                total_cost += snack.cost
+                if dis:
+                    total_cost += snack.dis_cost
+                    snacks.append(f'{snack.name} - {snack.dis_cost} тг.')
+                else:
+                    total_cost += snack.cost
+                    snacks.append(f'{snack.name} - {snack.cost} тг.')
             elif snack.type == 'drink':
-                drinks.append(f'{snack.name} - {snack.cost} тг.')
-                total_cost += snack.cost
+                if dis:
+                    total_cost += snack.dis_cost
+                    snacks.append(f'{snack.name} - {snack.dis_cost} тг.')
+                else:
+                    total_cost += snack.cost
+                    snacks.append(f'{snack.name} - {snack.cost} тг.')
 
         if snacks:
             snacks = '\n'.join(snacks)
@@ -264,28 +272,16 @@ def send_check():
 
                 if i['size'] == 'small':
                     size = 'Маленький'
-                    if dis:
-                        total_cost += size_pizza_cost.small_size_dis
-                        pizza_cost = size_pizza_cost.small_size_dis
-                    else:
-                        total_cost += size_pizza_cost.small_size
-                        pizza_cost = size_pizza_cost.small_size
+                    total_cost += size_pizza_cost.small_size
+                    pizza_cost = size_pizza_cost.small_size
                 elif i['size'] == 'medium':
                     size = 'Средний'
-                    if dis:
-                        total_cost += size_pizza_cost.med_size_dis
-                        pizza_cost = size_pizza_cost.med_size_dis
-                    else:
-                        total_cost += size_pizza_cost.med_size
-                        pizza_cost = size_pizza_cost.med_size
+                    total_cost += size_pizza_cost.med_size
+                    pizza_cost = size_pizza_cost.med_size
                 elif i['size'] == 'big':
                     size = 'Большой'
-                    if dis:
-                        total_cost += size_pizza_cost.big_size_dis
-                        pizza_cost = size_pizza_cost.big_size_dis
-                    else:
-                        total_cost += size_pizza_cost.big_size
-                        pizza_cost = size_pizza_cost.big_size
+                    total_cost += size_pizza_cost.big_size
+                    pizza_cost = size_pizza_cost.big_size
 
                 if i['dough'] == 'normal':
                     dough = 'Традиционное'
@@ -293,7 +289,7 @@ def send_check():
                     dough = 'Тонкое'
 
                 text += f'\n---------------------------------------\nПицца: {pizza.name}\nРазмер: {size}\n' \
-                        f'Тесто: {dough}\nЦена: {pizza_cost}'
+                        f'Тесто: {dough}\nЦена: {pizza_cost} тенге'
 
                 if i['supplements']:
                     text += '\n\nДобавки:\n\n'
@@ -368,11 +364,11 @@ def basket():
                     pizza.sauces = ", ".join(pizza_info["pizzas"][i]["sauces"])
                     pizza.user_id = current_user.id
                     db_sess.add(pizza)
+                    db_sess.commit()
                 orders = session.get('orders', {'pizzas': [],
                                                 'snacks': []})
                 orders['pizzas'] = []
                 session['orders'] = orders
-                db_sess.commit()
 
                 if session["orders"]["snacks"]:
                     snacks = db_sess.query(Snacks_orders)
@@ -390,11 +386,11 @@ def basket():
                         snack.snack_id = snack_info["snacks"][i]["snack_id"]
                         snack.user_id = current_user.id
                         db_sess.add(snack)
+                        db_sess.commit()
                     orders = session.get('orders', {'pizzas': [],
                                                     'snacks': []})
                     orders['snacks'] = []
                     session['orders'] = orders
-                    db_sess.commit()
 
         for pizza in db_sess.query(Pizza_orders).filter(Pizza_orders.user_id == current_user.id):
             for i in db_sess.query(Pizza).filter(Pizza.id == pizza.pizza_id):
@@ -422,7 +418,7 @@ def basket():
             basket_is_empty = False
 
         return render_template('basket.html', pizza=pizza_list, short=short, snack=snack_list, log=1, title="Корзина",
-                               basket_is_empty=basket_is_empty)
+                               basket_is_empty=basket_is_empty, dis=dis)
     else:
         list_pizza = []
         list_snack = []
@@ -440,12 +436,8 @@ def basket():
                     sum += sup.cost
                     supl.append(sup.name)
                 costs = db_sess.query(Size_cost).filter(Size_cost.id == p.id).first()
-                if not dis:
-                    list_pizza.append([i, p, ", ".join(supl), a, [costs.small_size + sum, costs.med_size + sum,
-                                                                  costs.big_size + sum]])
-                else:
-                    list_pizza.append([i, p, ", ".join(supl), a, [costs.small_size_dis + sum, costs.med_size_dis + sum,
-                                                                  costs.big_size_dis + sum]])
+                list_pizza.append([i, p, ", ".join(supl), a, [costs.small_size + sum, costs.med_size + sum,
+                                                              costs.big_size + sum]])
             a = -1
             for i in snack:
                 a += 1
