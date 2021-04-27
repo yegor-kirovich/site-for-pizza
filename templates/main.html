@@ -2,10 +2,12 @@
 
 {% block content %}
     <link rel="stylesheet" href="/static/css/main.css">
-    {% if discount == 1 %}
-        <div class="alert">
-            <h3 class="text">Поздравляю! Вы получили 10% скидку</h3>
-        </div>
+    {% if current_user.name != "admin" %}
+        {% if discount == 1 %}
+            <div class="alert">
+                <h3 class="text">Поздравляю! Вы получили 10% скидку</h3>
+            </div>
+        {% endif %}
     {% endif %}
 
     <div class="par">
@@ -41,12 +43,11 @@
                     <h5 class="pizza_cost">от {{ item.cost }} тг.</h5>
                 </div>
             {% else %}
-                <div class="pizza_div">
+                <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/delete_bd/pizza/{{ item.id }}"'>
                     <img class="pizza_img" src="{{ short }}pizzas/{{ item.href }}">
                     <h3 class="pizza_name">{{ item.name }}</h3>
                     <h6 class="pizza_text">{{ item.about }}</h6>
                     <h5 class="pizza_cost">от {{ item.cost }} тг.</h5>
-                    <button onClick='location.href="http://127.0.0.1:5000/delete_bd/pizza/{{ item.id }}"'>Удалить</button>
                 </div>
             {% endif %}
         {% endif %}
@@ -60,50 +61,36 @@
         {% if item.type == "snack" %}
             {% if discount == 1 %}
                 {% if current_user.name != "admin" %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <strike class="pizza_cost">{{ item.cost }} тг.</strike>
                         <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
-                        <div>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
-                            <h5 class="n">{{ cou[item.id] }}</h5>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
-                        </div>
-                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
                     </div>
                 {% else %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <strike class="pizza_cost">{{ item.cost }} тг.</strike>
                         <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
-                        <button onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>Удалить</button>
                     </div>
                 {% endif %}
             {% else %}
                 {% if current_user.name != "admin" %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <h5 class="pizza_cost">{{ item.cost }} тг.</h5>
-                        <div>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
-                            <h5 class="n">{{ cou[item.id] }}</h5>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
-                        </div>
-                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
                     </div>
                 {% else %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}snacks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <h5 class="pizza_cost">{{ item.cost }} тг.</h5>
-                        <button onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>Удалить</button>
                     </div>
                 {% endif %}
             {% endif %}
@@ -118,50 +105,36 @@
         {% if item.type == "drink" %}
             {% if discount == 1 %}
                 {% if current_user.name != "admin" %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}drinks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <strike class="pizza_cost">{{ item.cost }} тг.</strike>
                         <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
-                        <div>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
-                            <h5 class="n">{{ cou[item.id] }}</h5>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
-                        </div>
-                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
                     </div>
                 {% else %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}drinks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <strike class="pizza_cost">{{ item.cost }} тг.</strike>
                         <h4 class="pizza_cost">{{ item.dis_cost }} тг.</h4>
-                        <button onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>Удалить</button>
                     </div>
                 {% endif %}
             {% else %}
                 {% if current_user.name != "admin" %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}drinks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <h5 class="pizza_cost">{{ item.cost }} тг.</h5>
-                        <div>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/delete_num/{{ item.id }}"'>-</button>
-                            <h5 class="n">{{ cou[item.id] }}</h5>
-                            <button class="n" onClick='location.href="http://127.0.0.1:5000/add_num/{{ item.id }}"'>+</button>
-                        </div>
-                        <button class="submit" onClick='location.href="http://127.0.0.1:5000/add_snack/{{ item.id }}"'>Купить</button>
                     </div>
                 {% else %}
-                    <div class="snack_div">
+                    <div class="pizza_div" onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>
                         <img class="pizza_img" src="{{ short }}drinks/{{ item.href }}">
                         <h3 class="pizza_name">{{ item.name }}</h3>
                         <h6 class="pizza_text">{{ item.about }}</h6>
                         <h5 class="pizza_cost">{{ item.cost }} тг.</h5>
-                        <button onClick='location.href="http://127.0.0.1:5000/delete_bd/snack/{{ item.id }}"'>Удалить</button>
                     </div>
                 {% endif %}
             {% endif %}

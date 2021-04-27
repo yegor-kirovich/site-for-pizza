@@ -27,10 +27,6 @@ login_manager.init_app(app)
 
 dis = False
 
-a = {}
-for i in range(1, 63):
-    a[i] = 1
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -40,18 +36,17 @@ def load_user(user_id):
 
 @app.route('/')
 def main_menu():
-    global dis, a
+    global dis
     db_sess = db_session.create_session()
     pizza = db_sess.query(Pizza)
     snack = db_sess.query(Snack)
     short = "static/img/"
-    cou = a
     if current_user.is_authenticated and (current_user.count_orders % 10 == 0):
         dis = True
         return render_template("main.html", pizza=pizza,
-                               short=short, discount=1, snack=snack, title='Пиццерия', cou=cou)
+                               short=short, discount=1, snack=snack, title='Пиццерия')
     dis = False
-    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack, title='Пиццерия', cou=cou)
+    return render_template("main.html", pizza=pizza, short=short, discount=0, snack=snack, title='Пиццерия')
 
 
 @app.route('/add_pizza/<int:pizza_id>', methods=['GET', 'POST'])
@@ -87,20 +82,17 @@ def add_pizza(pizza_id):
 
 @app.route('/add_snack/<int:snack_id>')
 def add_snack(snack_id):
-    global a
     db_sess = db_session.create_session()
     if current_user.is_authenticated:
-        for _ in range(a[snack_id]):
-            order_snack = Snacks_orders()
-            order_snack.snack_id = snack_id
-            current_user.snacks_orders.append(order_snack)
-            db_sess.merge(current_user)
+        order_snack = Snacks_orders()
+        order_snack.snack_id = snack_id
+        current_user.snacks_orders.append(order_snack)
+        db_sess.merge(current_user)
         db_sess.commit()
     else:
         orders = session.get('orders', {'pizzas': [],
                                         'snacks': []})
-        for _ in range(a[snack_id]):
-            orders['snacks'].append({'snack_id': snack_id})
+        orders['snacks'].append({'snack_id': snack_id})
         session['orders'] = orders
     return redirect('/')
 
