@@ -234,7 +234,8 @@ def send_check():
             drinks = '\n'.join(drinks)
             text += f'\nНапитки:\n\n{drinks}\n---------------------------------------'
 
-        text += f'\nИтого: {total_cost} тенге\n\nВаш заказ будет доставлен по адресу: {address}\nПриятного аппетита!'
+        text += f'\nИтого: {total_cost} тенге\n\nСпособ оплаты: наличными\nВаш заказ будет доставлен по адресу: ' \
+                f'{address}\nПриятного аппетита!'
         if send_mail(email, 'Спасибо за заказ!', text):
             dis = False
             current_user.count_orders += 1
@@ -316,7 +317,8 @@ def send_check():
                 drinks = '\n'.join(drinks)
                 text += f'\nНапитки:\n\n{drinks}\n---------------------------------------'
 
-            text += f'\nИтого: {total_cost} тенге\n\nВаш заказ будет доставлен по адресу: {form.address.data}' \
+            text += f'\nИтого: {total_cost} тенге\n\nСпособ оплаты: наличными\nВаш заказ будет доставлен по адресу: ' \
+                    f'{form.address.data}' \
                     f'\nПриятного аппетита!'
 
             if send_mail(form.email.data, 'Спасибо за заказ!', text):
