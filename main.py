@@ -15,10 +15,12 @@ from data.Forms.Get_user_info import EmailForm
 from data.Forms.Admin_Rights import AdminPizzaForm
 from data.database.snacks import Snack
 from data.database.snacks_orders import Snacks_orders
+from flask_ngrok import run_with_ngrok
 
 db_session.global_init("db/pizzeria.db")
 
 app = Flask(__name__)
+run_with_ngrok(app)
 load_dotenv()
 app.config['SECRET_KEY'] = 'pizzeria_secret_key'
 
