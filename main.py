@@ -15,7 +15,6 @@ from data.Forms.Get_user_info import EmailForm
 from data.Forms.Admin_Rights import AdminPizzaForm
 from data.database.snacks import Snack
 from data.database.snacks_orders import Snacks_orders
-from waitress import serve
 
 db_session.global_init("db/pizzeria.db")
 
@@ -618,4 +617,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    serve(app, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
